@@ -1,16 +1,17 @@
-use std::fmt::Display;
-use std::sync::Arc;
-
 use derive_more::From;
 use primitive_types::H160;
 use serde::{Deserialize, Serialize};
 
+use crate::api_core::{ClassHash, CompiledClassHash, ContractAddress, EntryPointSelector, Nonce};
 use crate::block::{BlockHash, BlockNumber};
-use crate::core::{ClassHash, CompiledClassHash, ContractAddress, EntryPointSelector, Nonce};
 use crate::hash::{StarkFelt, StarkHash};
 use crate::serde_utils::PrefixedBytesAsHex;
+use crate::stdlib::fmt::Display;
+use crate::stdlib::string::ToString;
+use crate::stdlib::sync::Arc;
+use crate::stdlib::vec::Vec;
+use crate::stdlib::{fmt, mem};
 use crate::StarknetApiError;
-
 /// A transaction.
 #[derive(Debug, Clone, Eq, PartialEq, Hash, Deserialize, Serialize, PartialOrd, Ord)]
 pub enum Transaction {
@@ -305,7 +306,7 @@ impl From<Fee> for StarkFelt {
 pub struct TransactionHash(pub StarkHash);
 
 impl Display for TransactionHash {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
     }
 }
@@ -361,7 +362,7 @@ pub struct EthAddress(pub H160);
 impl TryFrom<StarkFelt> for EthAddress {
     type Error = StarknetApiError;
     fn try_from(felt: StarkFelt) -> Result<Self, Self::Error> {
-        const COMPLIMENT_OF_H160: usize = std::mem::size_of::<StarkFelt>() - H160::len_bytes();
+        const COMPLIMENT_OF_H160: usize = mem::size_of::<StarkFelt>() - H160::len_bytes();
 
         let (rest, h160_bytes) = felt.bytes().split_at(COMPLIMENT_OF_H160);
         if rest != [0u8; COMPLIMENT_OF_H160] {
