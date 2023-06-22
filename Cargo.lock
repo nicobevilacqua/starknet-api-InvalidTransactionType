@@ -131,8 +131,9 @@ checksum = "14c189c53d098945499cdfa7ecc63567cf3886b3332b312a5b4585d8d3a6a610"
 [[package]]
 name = "cairo-felt"
 version = "0.6.0"
-source = "git+https://github.com/keep-starknet-strange/cairo-rs?branch=no_std-support-with-cairo-1#441a3285fa473b9d41782ab62b16ae9f1824e502"
+source = "git+https://github.com/keep-starknet-strange/cairo-rs?branch=lucas/scale-codec#4b3eddd111ef794be1ccbd67c212828bf216a48e"
 dependencies = [
+ "hex",
  "lazy_static",
  "num-bigint",
  "num-integer",
@@ -143,7 +144,7 @@ dependencies = [
 [[package]]
 name = "cairo-lang-casm"
 version = "2.0.0-rc2"
-source = "git+https://github.com/keep-starknet-strange/cairo?branch=no_std-support#c1dcc9dbf85efcdde020d14cc1cfa64d6640d2ee"
+source = "git+https://github.com/keep-starknet-strange/cairo?branch=lucas/scale-codec#c2f8b85dfb3cf51cc960f5fc86b298529659e10d"
 dependencies = [
  "cairo-lang-utils",
  "hashbrown 0.14.0",
@@ -158,7 +159,7 @@ dependencies = [
 [[package]]
 name = "cairo-lang-casm-contract-class"
 version = "2.0.0-rc2"
-source = "git+https://github.com/keep-starknet-strange/cairo?branch=no_std-support#c1dcc9dbf85efcdde020d14cc1cfa64d6640d2ee"
+source = "git+https://github.com/keep-starknet-strange/cairo?branch=lucas/scale-codec#c2f8b85dfb3cf51cc960f5fc86b298529659e10d"
 dependencies = [
  "cairo-lang-casm",
  "cairo-lang-utils",
@@ -169,7 +170,7 @@ dependencies = [
 [[package]]
 name = "cairo-lang-utils"
 version = "2.0.0-rc2"
-source = "git+https://github.com/keep-starknet-strange/cairo?branch=no_std-support#c1dcc9dbf85efcdde020d14cc1cfa64d6640d2ee"
+source = "git+https://github.com/keep-starknet-strange/cairo?branch=lucas/scale-codec#c2f8b85dfb3cf51cc960f5fc86b298529659e10d"
 dependencies = [
  "cairo-felt",
  "hashbrown 0.14.0",
