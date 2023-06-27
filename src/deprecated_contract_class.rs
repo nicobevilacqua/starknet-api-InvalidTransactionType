@@ -180,11 +180,14 @@ fn hex_string_try_into_usize(hex_string: &str) -> Result<usize, crate::stdlib::n
     usize::from_str_radix(hex_string.trim_start_matches("0x"), 16)
 }
 
+#[cfg(feature = "parity-scale-codec")]
 impl Encode for EntryPointOffset {
     fn encode(&self) -> Vec<u8> {
         (self.0 as u64).encode()
     }
 }
+
+#[cfg(feature = "parity-scale-codec")]
 impl Decode for EntryPointOffset {
     fn decode<I: parity_scale_codec::Input>(
         input: &mut I,
