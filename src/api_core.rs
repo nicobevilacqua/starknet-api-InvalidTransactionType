@@ -11,7 +11,7 @@ use crate::stdlib::fmt::{self, Debug};
 use crate::stdlib::mem;
 use crate::stdlib::string::String;
 use crate::transaction::{Calldata, ContractAddressSalt};
-use crate::StarknetApiError;
+use crate::{impl_from_through_intermediate, StarknetApiError};
 
 /// A chain id.
 #[derive(Clone, Debug, Display, Eq, PartialEq, Hash, Deserialize, Serialize, PartialOrd, Ord)]
@@ -30,6 +30,14 @@ impl ChainId {
     Debug, Default, Copy, Clone, Eq, PartialEq, Hash, Deserialize, Serialize, PartialOrd, Ord,
 )]
 pub struct ContractAddress(pub PatriciaKey);
+
+impl From<u128> for ContractAddress {
+    fn from(val: u128) -> Self {
+        ContractAddress(PatriciaKey::from(val))
+    }
+}
+
+impl_from_through_intermediate!(u128, ContractAddress, u8, u16, u32, u64);
 
 /// The maximal size of storage var.
 pub const MAX_STORAGE_ITEM_SIZE: u16 = 256;
@@ -160,6 +168,14 @@ impl PatriciaKey {
         &self.0
     }
 }
+
+impl From<u128> for PatriciaKey {
+    fn from(val: u128) -> Self {
+        PatriciaKey::try_from(StarkFelt::from(val)).expect("Failed to convert u128 to PatriciaKey.")
+    }
+}
+
+impl_from_through_intermediate!(u128, PatriciaKey, u8, u16, u32, u64);
 
 impl TryFrom<StarkHash> for PatriciaKey {
     type Error = StarknetApiError;
