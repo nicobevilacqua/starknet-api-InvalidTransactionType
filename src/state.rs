@@ -21,7 +21,7 @@ use crate::stdlib::collections::HashMap;
 use crate::stdlib::fmt::Debug;
 use crate::stdlib::string::String;
 use crate::stdlib::vec::Vec;
-use crate::StarknetApiError;
+use crate::{impl_from_through_intermediate, StarknetApiError};
 
 pub type DeclaredClasses = IndexMap<ClassHash, ContractClass, HasherBuilder>;
 pub type DeprecatedDeclaredClasses = IndexMap<ClassHash, DeprecatedContractClass, HasherBuilder>;
