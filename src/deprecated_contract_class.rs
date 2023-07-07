@@ -110,7 +110,10 @@ pub struct Program {
     Debug, Default, Clone, Copy, Eq, PartialEq, Hash, Deserialize, Serialize, PartialOrd, Ord,
 )]
 #[serde(deny_unknown_fields)]
-#[cfg_attr(feature = "scale-info", derive(parity_scale_codec::Encode, parity_scale_codec::Decode))]
+#[cfg_attr(
+    feature = "codec",
+    derive(scale_codec::Encode, scale_codec::Decode, scale_info::TypeInfo)
+)]
 pub enum EntryPointType {
     /// A constructor entry point.
     #[serde(rename = "CONSTRUCTOR")]
@@ -126,7 +129,10 @@ pub enum EntryPointType {
 
 /// An entry point of a [ContractClass](`crate::deprecated_contract_class::ContractClass`).
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash, Deserialize, Serialize, PartialOrd, Ord)]
-#[cfg_attr(feature = "scale-info", derive(parity_scale_codec::Encode, parity_scale_codec::Decode))]
+#[cfg_attr(
+    feature = "codec",
+    derive(scale_codec::Encode, scale_codec::Decode, scale_info::TypeInfo)
+)]
 pub struct EntryPoint {
     pub selector: EntryPointSelector,
     pub offset: EntryPointOffset,
@@ -178,18 +184,53 @@ fn hex_string_try_into_usize(hex_string: &str) -> Result<usize, crate::stdlib::n
     usize::from_str_radix(hex_string.trim_start_matches("0x"), 16)
 }
 
-#[cfg(feature = "scale-info")]
-impl parity_scale_codec::Encode for EntryPointOffset {
-    fn encode(&self) -> Vec<u8> {
-        (self.0 as u64).encode()
+#[cfg(all(target_pointer_width = "64", feature = "codec"))]
+mod entry_point_offset_impl_codec_u64 {
+    use super::EntryPointOffset;
+    use crate::stdlib::vec::Vec;
+
+    impl scale_codec::Encode for EntryPointOffset {
+        fn encode(&self) -> Vec<u8> {
+            (self.0 as u64).encode()
+        }
+    }
+
+    impl scale_codec::Decode for EntryPointOffset {
+        fn decode<I: scale_codec::Input>(input: &mut I) -> Result<Self, scale_codec::Error> {
+            Ok(Self(<u64>::decode(input)? as usize))
+        }
+    }
+
+    impl scale_info::TypeInfo for EntryPointOffset {
+        type Identity = u64;
+
+        fn type_info() -> scale_info::Type {
+            <u64 as scale_info::TypeInfo>::type_info()
+        }
     }
 }
+#[cfg(all(target_pointer_width = "32", feature = "codec"))]
+mod entry_point_offset_impl_codec_u32 {
+    use super::EntryPointOffset;
+    use crate::stdlib::vec::Vec;
 
-#[cfg(feature = "scale-info")]
-impl parity_scale_codec::Decode for EntryPointOffset {
-    fn decode<I: parity_scale_codec::Input>(
-        input: &mut I,
-    ) -> Result<Self, parity_scale_codec::Error> {
-        Ok(Self(<u64>::decode(input)? as usize))
+    impl scale_codec::Encode for EntryPointOffset {
+        fn encode(&self) -> Vec<u8> {
+            (self.0 as u32).encode()
+        }
+    }
+
+    impl scale_codec::Decode for EntryPointOffset {
+        fn decode<I: scale_codec::Input>(input: &mut I) -> Result<Self, scale_codec::Error> {
+            Ok(Self(<u32>::decode(input)? as usize))
+        }
+    }
+
+    impl scale_info::TypeInfo for EntryPointOffset {
+        type Identity = u32;
+
+        fn type_info() -> scale_info::Type {
+            <u32 as scale_info::TypeInfo>::type_info()
+        }
     }
 }
