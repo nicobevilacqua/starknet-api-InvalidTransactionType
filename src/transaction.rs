@@ -12,8 +12,9 @@ use crate::stdlib::sync::Arc;
 use crate::stdlib::vec::Vec;
 use crate::stdlib::{fmt, mem};
 use crate::StarknetApiError;
+
 /// A transaction.
-#[derive(Debug, Clone, Eq, PartialEq, Hash, Deserialize, Serialize, PartialOrd, Ord)]
+#[derive(Debug, Clone, Eq, PartialEq, Hash, Deserialize, Serialize, PartialOrd, Ord, From)]
 #[cfg_attr(
     feature = "codec",
     derive(scale_codec::Encode, scale_codec::Decode, scale_info::TypeInfo)
