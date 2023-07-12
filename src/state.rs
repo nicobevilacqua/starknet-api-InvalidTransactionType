@@ -137,6 +137,10 @@ impl StateNumber {
 #[derive(
     Debug, Default, Clone, Copy, Eq, PartialEq, Hash, Deserialize, Serialize, PartialOrd, Ord,
 )]
+#[cfg_attr(
+    feature = "codec",
+    derive(scale_codec::Encode, scale_codec::Decode, scale_info::TypeInfo)
+)]
 pub struct StorageKey(pub PatriciaKey);
 
 impl TryFrom<StarkHash> for StorageKey {
