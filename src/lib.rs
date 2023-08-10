@@ -38,6 +38,7 @@ pub enum StarknetApiError {
     InnerDeserialization(InnerDeserializationError),
     /// An error for when a value is out of range.
     OutOfRange { string: String },
+    InvalidTransactionType { string: String },
     /// Error when serializing into number.
     ParseIntError(ParseIntError),
 }
@@ -48,6 +49,7 @@ impl std::error::Error for StarknetApiError {
         match self {
             StarknetApiError::InnerDeserialization(e) => e.source(),
             StarknetApiError::OutOfRange { .. } => std::option::Option::None,
+            StarknetApiError::InvalidTransactionType { .. } => std::option::Option::None,
             StarknetApiError::ParseIntError(e) => e.source(),
         }
     }
@@ -59,6 +61,9 @@ impl core::fmt::Display for StarknetApiError {
             StarknetApiError::InnerDeserialization(e) => e.fmt(f),
             StarknetApiError::OutOfRange { string } => {
                 write!(f, "Out of range {string}.")
+            }
+            StarknetApiError::InvalidTransactionType { string } => {
+                write!(f, "Invalid transaction type {string}.")
             }
             StarknetApiError::ParseIntError(e) => e.fmt(f),
         }
